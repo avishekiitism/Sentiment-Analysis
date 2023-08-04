@@ -1,5 +1,6 @@
 # Sentiment-Analysis
-Project Title: Sentiment Analysis
+Project Title: Sentiment Analysis 
+
 Objective: To analyze the sentiment (positive, negative, neutral) of textual data.
 Dataset: Gather and preprocess a diverse dataset containing labeled text samples.
 Data Cleaning: Remove noise, special characters, and handle missing values in the dataset.
