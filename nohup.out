@@ -1,0 +1,9 @@
+[NbConvertApp] WARNING | pattern '05_04.ipynb\xa0' matched no files
+[NbConvertApp] Converting notebook 05_04.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+2024-04-07 10:59:44.602776: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: $/var/lib/docker/overlay2/18478643efb701f8f9328b366f3a90e0c665abd53b5648d82e2f2485dad3916c/merged/usr/local/cuda-11.4/targets/x86_64-linux/lib/libcudart.so.11.0
+2024-04-07 10:59:44.602854: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+The current process just got forked. Disabling parallelism to avoid deadlocks...
+To disable this warning, please explicitly set TOKENIZERS_PARALLELISM=(true | false)
+The current process just got forked. Disabling parallelism to avoid deadlocks...
+To disable this warning, please explicitly set TOKENIZERS_PARALLELISM=(true | false)
