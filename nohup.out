@@ -236,3 +236,774 @@ df.shape
 [0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: '../input/covid-19/Corona_NLP_train.csv'
 FileNotFoundError: [Errno 2] No such file or directory: '../input/covid-19/Corona_NLP_train.csv'
 
+[NbConvertApp] Converting notebook demo.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+[NbConvertApp] Writing 3088 bytes to demo.ipynb
+[NbConvertApp] Converting notebook 11_04_cnn+lstm.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+Traceback (most recent call last):
+  File "/raid/home/dgx914/.local/bin/jupyter-nbconvert", line 8, in <module>
+    sys.exit(main())
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/jupyter_core/application.py", line 264, in launch_instance
+    return super(JupyterApp, cls).launch_instance(argv=argv, **kwargs)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/traitlets/config/application.py", line 664, in launch_instance
+    app.start()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 350, in start
+    self.convert_notebooks()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 524, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 489, in convert_single_notebook
+    output, resources = self.export_single_notebook(notebook_filename, resources, input_buffer=input_buffer)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 418, in export_single_notebook
+    output, resources = self.exporter.from_filename(notebook_filename, resources=resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 181, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 199, in from_file
+    return self.from_notebook_node(nbformat.read(file_stream, as_version=4), resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/notebook.py", line 32, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 143, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 318, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
+    return self.preprocess(nb, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 79, in preprocess
+    self.execute()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/lib/python3.6/asyncio/base_events.py", line 484, in run_until_complete
+    return future.result()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 560, in async_execute
+    cell, index, execution_count=self.code_cells_executed + 1
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 123, in async_execute_cell
+    cell, resources = self.preprocess_cell(cell, self.resources, cell_index)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 146, in preprocess_cell
+    cell = run_sync(NotebookClient.async_execute_cell)(self, cell, index, store_history=self.store_history)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nest_asyncio.py", line 98, in run_until_complete
+    return f.result()
+  File "/usr/lib/python3.6/asyncio/tasks.py", line 180, in _step
+    result = coro.send(None)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 854, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 756, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import os
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from wordcloud import WordCloud,STOPWORDS
+from bs4 import BeautifulSoup
+import re,string,unicodedata
+import os
+from IPython.display import Image
+
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
+#from xgboost.sklearn import XGBClassifier
+
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.layers import Dense,Input, Embedding,LSTM,Dropout,Conv1D, MaxPooling1D, GlobalMaxPooling1D,Dropout,Bidirectional,Flatten,BatchNormalization
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.utils import plot_model
+#import transformers
+#import tokenizers
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+[0;32m<ipython-input-1-10ab5c70a918>[0m in [0;36m<module>[0;34m[0m
+[1;32m      4[0m [0;32mimport[0m [0mseaborn[0m [0;32mas[0m [0msns[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      5[0m [0;32mimport[0m [0mmatplotlib[0m[0;34m.[0m[0mpyplot[0m [0;32mas[0m [0mplt[0m[0;34m[0m[0;34m[0m[0m
+[0;32m----> 6[0;31m [0;32mfrom[0m [0mnltk[0m[0;34m.[0m[0mcorpus[0m [0;32mimport[0m [0mstopwords[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m      7[0m [0;32mfrom[0m [0mnltk[0m[0;34m.[0m[0mstem[0m [0;32mimport[0m [0mWordNetLemmatizer[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      8[0m [0;32mfrom[0m [0mnltk[0m[0;34m.[0m[0mtokenize[0m [0;32mimport[0m [0mword_tokenize[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mModuleNotFoundError[0m: No module named 'nltk'
+ModuleNotFoundError: No module named 'nltk'
+
+[NbConvertApp] Converting notebook 11_04_cnn+lstm.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+Traceback (most recent call last):
+  File "/raid/home/dgx914/.local/bin/jupyter-nbconvert", line 8, in <module>
+    sys.exit(main())
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/jupyter_core/application.py", line 264, in launch_instance
+    return super(JupyterApp, cls).launch_instance(argv=argv, **kwargs)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/traitlets/config/application.py", line 664, in launch_instance
+    app.start()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 350, in start
+    self.convert_notebooks()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 524, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 489, in convert_single_notebook
+    output, resources = self.export_single_notebook(notebook_filename, resources, input_buffer=input_buffer)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 418, in export_single_notebook
+    output, resources = self.exporter.from_filename(notebook_filename, resources=resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 181, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 199, in from_file
+    return self.from_notebook_node(nbformat.read(file_stream, as_version=4), resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/notebook.py", line 32, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 143, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 318, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
+    return self.preprocess(nb, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 79, in preprocess
+    self.execute()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/lib/python3.6/asyncio/base_events.py", line 484, in run_until_complete
+    return future.result()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 560, in async_execute
+    cell, index, execution_count=self.code_cells_executed + 1
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 123, in async_execute_cell
+    cell, resources = self.preprocess_cell(cell, self.resources, cell_index)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 146, in preprocess_cell
+    cell = run_sync(NotebookClient.async_execute_cell)(self, cell, index, store_history=self.store_history)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nest_asyncio.py", line 98, in run_until_complete
+    return f.result()
+  File "/usr/lib/python3.6/asyncio/tasks.py", line 180, in _step
+    result = coro.send(None)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 854, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 756, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import nltk
+nltk.download('stopwords')
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+[0;32m<ipython-input-1-dfaff734aa70>[0m in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0;31m [0;32mimport[0m [0mnltk[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m      2[0m [0mnltk[0m[0;34m.[0m[0mdownload[0m[0;34m([0m[0;34m'stopwords'[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mModuleNotFoundError[0m: No module named 'nltk'
+ModuleNotFoundError: No module named 'nltk'
+
+[NbConvertApp] Converting notebook 11_04_cnn+lstm.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+Traceback (most recent call last):
+  File "/raid/home/dgx914/.local/bin/jupyter-nbconvert", line 8, in <module>
+    sys.exit(main())
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/jupyter_core/application.py", line 264, in launch_instance
+    return super(JupyterApp, cls).launch_instance(argv=argv, **kwargs)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/traitlets/config/application.py", line 664, in launch_instance
+    app.start()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 350, in start
+    self.convert_notebooks()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 524, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 489, in convert_single_notebook
+    output, resources = self.export_single_notebook(notebook_filename, resources, input_buffer=input_buffer)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 418, in export_single_notebook
+    output, resources = self.exporter.from_filename(notebook_filename, resources=resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 181, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 199, in from_file
+    return self.from_notebook_node(nbformat.read(file_stream, as_version=4), resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/notebook.py", line 32, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 143, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 318, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
+    return self.preprocess(nb, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 79, in preprocess
+    self.execute()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/lib/python3.6/asyncio/base_events.py", line 484, in run_until_complete
+    return future.result()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 560, in async_execute
+    cell, index, execution_count=self.code_cells_executed + 1
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 123, in async_execute_cell
+    cell, resources = self.preprocess_cell(cell, self.resources, cell_index)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 146, in preprocess_cell
+    cell = run_sync(NotebookClient.async_execute_cell)(self, cell, index, store_history=self.store_history)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nest_asyncio.py", line 98, in run_until_complete
+    return f.result()
+  File "/usr/lib/python3.6/asyncio/tasks.py", line 180, in _step
+    result = coro.send(None)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 854, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 756, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import os
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from wordcloud import WordCloud,STOPWORDS
+from bs4 import BeautifulSoup
+import re,string,unicodedata
+import os
+from IPython.display import Image
+
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
+#from xgboost.sklearn import XGBClassifier
+
+import tensorflow as tf
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.layers import Dense,Input, Embedding,LSTM,Dropout,Conv1D, MaxPooling1D, GlobalMaxPooling1D,Dropout,Bidirectional,Flatten,BatchNormalization
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.utils import plot_model
+#import transformers
+#import tokenizers
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+[0;32m<ipython-input-1-10ab5c70a918>[0m in [0;36m<module>[0;34m[0m
+[1;32m      8[0m [0;32mfrom[0m [0mnltk[0m[0;34m.[0m[0mtokenize[0m [0;32mimport[0m [0mword_tokenize[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      9[0m [0;32mfrom[0m [0mwordcloud[0m [0;32mimport[0m [0mWordCloud[0m[0;34m,[0m[0mSTOPWORDS[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 10[0;31m [0;32mfrom[0m [0mbs4[0m [0;32mimport[0m [0mBeautifulSoup[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     11[0m [0;32mimport[0m [0mre[0m[0;34m,[0m[0mstring[0m[0;34m,[0m[0municodedata[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     12[0m [0;32mimport[0m [0mos[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mModuleNotFoundError[0m: No module named 'bs4'
+ModuleNotFoundError: No module named 'bs4'
+
+[NbConvertApp] Converting notebook 11_04_cnn+lstm.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+2024-04-11 20:22:23.634599: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: $/var/lib/docker/overlay2/18478643efb701f8f9328b366f3a90e0c665abd53b5648d82e2f2485dad3916c/merged/usr/local/cuda-11.4/targets/x86_64-linux/lib/libcudart.so.11.0
+2024-04-11 20:22:23.634675: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+Traceback (most recent call last):
+  File "/raid/home/dgx914/.local/bin/jupyter-nbconvert", line 8, in <module>
+    sys.exit(main())
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/jupyter_core/application.py", line 264, in launch_instance
+    return super(JupyterApp, cls).launch_instance(argv=argv, **kwargs)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/traitlets/config/application.py", line 664, in launch_instance
+    app.start()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 350, in start
+    self.convert_notebooks()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 524, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 489, in convert_single_notebook
+    output, resources = self.export_single_notebook(notebook_filename, resources, input_buffer=input_buffer)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 418, in export_single_notebook
+    output, resources = self.exporter.from_filename(notebook_filename, resources=resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 181, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 199, in from_file
+    return self.from_notebook_node(nbformat.read(file_stream, as_version=4), resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/notebook.py", line 32, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 143, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 318, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
+    return self.preprocess(nb, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 79, in preprocess
+    self.execute()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/lib/python3.6/asyncio/base_events.py", line 484, in run_until_complete
+    return future.result()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 560, in async_execute
+    cell, index, execution_count=self.code_cells_executed + 1
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 123, in async_execute_cell
+    cell, resources = self.preprocess_cell(cell, self.resources, cell_index)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 146, in preprocess_cell
+    cell = run_sync(NotebookClient.async_execute_cell)(self, cell, index, store_history=self.store_history)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nest_asyncio.py", line 98, in run_until_complete
+    return f.result()
+  File "/usr/lib/python3.6/asyncio/tasks.py", line 180, in _step
+    result = coro.send(None)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 854, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 756, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+data['review']=data['review'].apply(clean_text,lemmatize = True)
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mLookupError[0m                               Traceback (most recent call last)
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     83[0m                 [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 84[0;31m                     [0mroot[0m [0;34m=[0m [0mnltk[0m[0;34m.[0m[0mdata[0m[0;34m.[0m[0mfind[0m[0;34m([0m[0;34mf"{self.subdir}/{zip_name}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     85[0m                 [0;32mexcept[0m [0mLookupError[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/data.py[0m in [0;36mfind[0;34m(resource_name, paths)[0m
+[1;32m    582[0m     [0mresource_not_found[0m [0;34m=[0m [0;34mf"\n{sep}\n{msg}\n{sep}\n"[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 583[0;31m     [0;32mraise[0m [0mLookupError[0m[0;34m([0m[0mresource_not_found[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    584[0m [0;34m[0m[0m
+
+[0;31mLookupError[0m: 
+**********************************************************************
+  Resource [93momw-1.4[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('omw-1.4')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/omw-1.4.zip/omw-1.4/[0m
+
+  Searched in:
+    - '/raid/home/dgx914/nltk_data'
+    - '/usr/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+
+During handling of the above exception, another exception occurred:
+
+[0;31mLookupError[0m                               Traceback (most recent call last)
+[0;32m<ipython-input-1-546aaf841ee3>[0m in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0;31m [0mdata[0m[0;34m[[0m[0;34m'review'[0m[0;34m][0m[0;34m=[0m[0mdata[0m[0;34m[[0m[0;34m'review'[0m[0;34m][0m[0;34m.[0m[0mapply[0m[0;34m([0m[0mclean_text[0m[0;34m,[0m[0mlemmatize[0m [0;34m=[0m [0;32mTrue[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m
+[0;32m~/.local/lib/python3.6/site-packages/pandas/core/series.py[0m in [0;36mapply[0;34m(self, func, convert_dtype, args, **kwds)[0m
+[1;32m   4211[0m             [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   4212[0m                 [0mvalues[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0mastype[0m[0;34m([0m[0mobject[0m[0;34m)[0m[0;34m.[0m[0m_values[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 4213[0;31m                 [0mmapped[0m [0;34m=[0m [0mlib[0m[0;34m.[0m[0mmap_infer[0m[0;34m([0m[0mvalues[0m[0;34m,[0m [0mf[0m[0;34m,[0m [0mconvert[0m[0;34m=[0m[0mconvert_dtype[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   4214[0m [0;34m[0m[0m
+[1;32m   4215[0m         [0;32mif[0m [0mlen[0m[0;34m([0m[0mmapped[0m[0;34m)[0m [0;32mand[0m [0misinstance[0m[0;34m([0m[0mmapped[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m,[0m [0mSeries[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32mpandas/_libs/lib.pyx[0m in [0;36mpandas._libs.lib.map_infer[0;34m()[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/pandas/core/series.py[0m in [0;36mf[0;34m(x)[0m
+[1;32m   4196[0m [0;34m[0m[0m
+[1;32m   4197[0m             [0;32mdef[0m [0mf[0m[0;34m([0m[0mx[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 4198[0;31m                 [0;32mreturn[0m [0mfunc[0m[0;34m([0m[0mx[0m[0;34m,[0m [0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwds[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   4199[0m [0;34m[0m[0m
+[1;32m   4200[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m<ipython-input-1-299aeadfe9a2>[0m in [0;36mclean_text[0;34m(text, lemmatize)[0m
+[1;32m     21[0m     [0;31m#tokens = re.split('\W+', text) #create tokens[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     22[0m     [0;32mif[0m [0mlemmatize[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 23[0;31m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mwl[0m[0;34m.[0m[0mlemmatize[0m[0;34m([0m[0mword[0m[0;34m)[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m [0;31m#lemmatize[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     24[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     25[0m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mword[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m<ipython-input-1-299aeadfe9a2>[0m in [0;36m<listcomp>[0;34m(.0)[0m
+[1;32m     21[0m     [0;31m#tokens = re.split('\W+', text) #create tokens[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     22[0m     [0;32mif[0m [0mlemmatize[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 23[0;31m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mwl[0m[0;34m.[0m[0mlemmatize[0m[0;34m([0m[0mword[0m[0;34m)[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m [0;31m#lemmatize[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     24[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     25[0m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mword[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/stem/wordnet.py[0m in [0;36mlemmatize[0;34m(self, word, pos)[0m
+[1;32m     43[0m         [0;34m:[0m[0;32mreturn[0m[0;34m:[0m [0mThe[0m [0mlemma[0m [0mof[0m[0;31m [0m[0;31m`[0m[0mword[0m[0;31m`[0m[0;34m,[0m [0;32mfor[0m [0mthe[0m [0mgiven[0m[0;31m [0m[0;31m`[0m[0mpos[0m[0;31m`[0m[0;34m.[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     44[0m         """
+[0;32m---> 45[0;31m         [0mlemmas[0m [0;34m=[0m [0mwn[0m[0;34m.[0m[0m_morphy[0m[0;34m([0m[0mword[0m[0;34m,[0m [0mpos[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     46[0m         [0;32mreturn[0m [0mmin[0m[0;34m([0m[0mlemmas[0m[0;34m,[0m [0mkey[0m[0;34m=[0m[0mlen[0m[0;34m)[0m [0;32mif[0m [0mlemmas[0m [0;32melse[0m [0mword[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     47[0m [0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__getattr__[0;34m(self, attr)[0m
+[1;32m    119[0m             [0;32mraise[0m [0mAttributeError[0m[0;34m([0m[0;34m"LazyCorpusLoader object has no attribute '__bases__'"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    120[0m [0;34m[0m[0m
+[0;32m--> 121[0;31m         [0mself[0m[0;34m.[0m[0m__load[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    122[0m         [0;31m# This looks circular, but its not, since __load() changes our[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    123[0m         [0;31m# __class__ to something new:[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     87[0m [0;34m[0m[0m
+[1;32m     88[0m         [0;31m# Load the corpus.[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 89[0;31m         [0mcorpus[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m__reader_cls[0m[0;34m([0m[0mroot[0m[0;34m,[0m [0;34m*[0m[0mself[0m[0;34m.[0m[0m__args[0m[0;34m,[0m [0;34m**[0m[0mself[0m[0;34m.[0m[0m__kwargs[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     90[0m [0;34m[0m[0m
+[1;32m     91[0m         [0;31m# This is where the magic happens!  Transform ourselves into[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/reader/wordnet.py[0m in [0;36m__init__[0;34m(self, root, omw_reader)[0m
+[1;32m   1174[0m             )
+[1;32m   1175[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 1176[0;31m             [0mself[0m[0;34m.[0m[0mprovenances[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0momw_prov[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1177[0m [0;34m[0m[0m
+[1;32m   1178[0m         [0;31m# A cache to store the wordnet data of multiple languages[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/reader/wordnet.py[0m in [0;36momw_prov[0;34m(self)[0m
+[1;32m   1283[0m         [0mprovdict[0m [0;34m=[0m [0;34m{[0m[0;34m}[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1284[0m         [0mprovdict[0m[0;34m[[0m[0;34m"eng"[0m[0;34m][0m [0;34m=[0m [0;34m""[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 1285[0;31m         [0mfileids[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_omw_reader[0m[0;34m.[0m[0mfileids[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1286[0m         [0;32mfor[0m [0mfileid[0m [0;32min[0m [0mfileids[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1287[0m             [0mprov[0m[0;34m,[0m [0mlangfile[0m [0;34m=[0m [0mos[0m[0;34m.[0m[0mpath[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0mfileid[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__getattr__[0;34m(self, attr)[0m
+[1;32m    119[0m             [0;32mraise[0m [0mAttributeError[0m[0;34m([0m[0;34m"LazyCorpusLoader object has no attribute '__bases__'"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    120[0m [0;34m[0m[0m
+[0;32m--> 121[0;31m         [0mself[0m[0;34m.[0m[0m__load[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    122[0m         [0;31m# This looks circular, but its not, since __load() changes our[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    123[0m         [0;31m# __class__ to something new:[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     84[0m                     [0mroot[0m [0;34m=[0m [0mnltk[0m[0;34m.[0m[0mdata[0m[0;34m.[0m[0mfind[0m[0;34m([0m[0;34mf"{self.subdir}/{zip_name}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     85[0m                 [0;32mexcept[0m [0mLookupError[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 86[0;31m                     [0;32mraise[0m [0me[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     87[0m [0;34m[0m[0m
+[1;32m     88[0m         [0;31m# Load the corpus.[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     79[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     80[0m             [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 81[0;31m                 [0mroot[0m [0;34m=[0m [0mnltk[0m[0;34m.[0m[0mdata[0m[0;34m.[0m[0mfind[0m[0;34m([0m[0;34mf"{self.subdir}/{self.__name}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     82[0m             [0;32mexcept[0m [0mLookupError[0m [0;32mas[0m [0me[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     83[0m                 [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/data.py[0m in [0;36mfind[0;34m(resource_name, paths)[0m
+[1;32m    581[0m     [0msep[0m [0;34m=[0m [0;34m"*"[0m [0;34m*[0m [0;36m70[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    582[0m     [0mresource_not_found[0m [0;34m=[0m [0;34mf"\n{sep}\n{msg}\n{sep}\n"[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 583[0;31m     [0;32mraise[0m [0mLookupError[0m[0;34m([0m[0mresource_not_found[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    584[0m [0;34m[0m[0m
+[1;32m    585[0m [0;34m[0m[0m
+
+[0;31mLookupError[0m: 
+**********************************************************************
+  Resource [93momw-1.4[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('omw-1.4')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/omw-1.4[0m
+
+  Searched in:
+    - '/raid/home/dgx914/nltk_data'
+    - '/usr/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+LookupError: 
+**********************************************************************
+  Resource [93momw-1.4[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('omw-1.4')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/omw-1.4[0m
+
+  Searched in:
+    - '/raid/home/dgx914/nltk_data'
+    - '/usr/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+
+[NbConvertApp] Converting notebook 11_04_cnn+lstm.ipynb to notebook
+[NbConvertApp] Executing notebook with kernel: python3
+2024-04-11 20:35:56.255787: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: $/var/lib/docker/overlay2/18478643efb701f8f9328b366f3a90e0c665abd53b5648d82e2f2485dad3916c/merged/usr/local/cuda-11.4/targets/x86_64-linux/lib/libcudart.so.11.0
+2024-04-11 20:35:56.255861: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+Traceback (most recent call last):
+  File "/raid/home/dgx914/.local/bin/jupyter-nbconvert", line 8, in <module>
+    sys.exit(main())
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/jupyter_core/application.py", line 264, in launch_instance
+    return super(JupyterApp, cls).launch_instance(argv=argv, **kwargs)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/traitlets/config/application.py", line 664, in launch_instance
+    app.start()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 350, in start
+    self.convert_notebooks()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 524, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 489, in convert_single_notebook
+    output, resources = self.export_single_notebook(notebook_filename, resources, input_buffer=input_buffer)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/nbconvertapp.py", line 418, in export_single_notebook
+    output, resources = self.exporter.from_filename(notebook_filename, resources=resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 181, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 199, in from_file
+    return self.from_notebook_node(nbformat.read(file_stream, as_version=4), resources=resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/notebook.py", line 32, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 143, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/exporters/exporter.py", line 318, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
+    return self.preprocess(nb, resources)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 79, in preprocess
+    self.execute()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/lib/python3.6/asyncio/base_events.py", line 484, in run_until_complete
+    return future.result()
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 560, in async_execute
+    cell, index, execution_count=self.code_cells_executed + 1
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 123, in async_execute_cell
+    cell, resources = self.preprocess_cell(cell, self.resources, cell_index)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbconvert/preprocessors/execute.py", line 146, in preprocess_cell
+    cell = run_sync(NotebookClient.async_execute_cell)(self, cell, index, store_history=self.store_history)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nest_asyncio.py", line 98, in run_until_complete
+    return f.result()
+  File "/usr/lib/python3.6/asyncio/tasks.py", line 180, in _step
+    result = coro.send(None)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 854, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/raid/home/dgx914/.local/lib/python3.6/site-packages/nbclient/client.py", line 756, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+data['review']=data['review'].apply(clean_text,lemmatize = True)
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mLookupError[0m                               Traceback (most recent call last)
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     83[0m                 [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 84[0;31m                     [0mroot[0m [0;34m=[0m [0mnltk[0m[0;34m.[0m[0mdata[0m[0;34m.[0m[0mfind[0m[0;34m([0m[0;34mf"{self.subdir}/{zip_name}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     85[0m                 [0;32mexcept[0m [0mLookupError[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/data.py[0m in [0;36mfind[0;34m(resource_name, paths)[0m
+[1;32m    582[0m     [0mresource_not_found[0m [0;34m=[0m [0;34mf"\n{sep}\n{msg}\n{sep}\n"[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 583[0;31m     [0;32mraise[0m [0mLookupError[0m[0;34m([0m[0mresource_not_found[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    584[0m [0;34m[0m[0m
+
+[0;31mLookupError[0m: 
+**********************************************************************
+  Resource [93momw-1.4[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('omw-1.4')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/omw-1.4.zip/omw-1.4/[0m
+
+  Searched in:
+    - '/raid/home/dgx914/nltk_data'
+    - '/usr/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+
+During handling of the above exception, another exception occurred:
+
+[0;31mLookupError[0m                               Traceback (most recent call last)
+[0;32m<ipython-input-1-546aaf841ee3>[0m in [0;36m<module>[0;34m[0m
+[0;32m----> 1[0;31m [0mdata[0m[0;34m[[0m[0;34m'review'[0m[0;34m][0m[0;34m=[0m[0mdata[0m[0;34m[[0m[0;34m'review'[0m[0;34m][0m[0;34m.[0m[0mapply[0m[0;34m([0m[0mclean_text[0m[0;34m,[0m[0mlemmatize[0m [0;34m=[0m [0;32mTrue[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m
+[0;32m~/.local/lib/python3.6/site-packages/pandas/core/series.py[0m in [0;36mapply[0;34m(self, func, convert_dtype, args, **kwds)[0m
+[1;32m   4211[0m             [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   4212[0m                 [0mvalues[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0mastype[0m[0;34m([0m[0mobject[0m[0;34m)[0m[0;34m.[0m[0m_values[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 4213[0;31m                 [0mmapped[0m [0;34m=[0m [0mlib[0m[0;34m.[0m[0mmap_infer[0m[0;34m([0m[0mvalues[0m[0;34m,[0m [0mf[0m[0;34m,[0m [0mconvert[0m[0;34m=[0m[0mconvert_dtype[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   4214[0m [0;34m[0m[0m
+[1;32m   4215[0m         [0;32mif[0m [0mlen[0m[0;34m([0m[0mmapped[0m[0;34m)[0m [0;32mand[0m [0misinstance[0m[0;34m([0m[0mmapped[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m,[0m [0mSeries[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32mpandas/_libs/lib.pyx[0m in [0;36mpandas._libs.lib.map_infer[0;34m()[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/pandas/core/series.py[0m in [0;36mf[0;34m(x)[0m
+[1;32m   4196[0m [0;34m[0m[0m
+[1;32m   4197[0m             [0;32mdef[0m [0mf[0m[0;34m([0m[0mx[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 4198[0;31m                 [0;32mreturn[0m [0mfunc[0m[0;34m([0m[0mx[0m[0;34m,[0m [0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwds[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   4199[0m [0;34m[0m[0m
+[1;32m   4200[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m<ipython-input-1-b7ddfba7567d>[0m in [0;36mclean_text[0;34m(text, lemmatize)[0m
+[1;32m     20[0m     [0;31m#tokens = re.split('\W+', text) #create tokens[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     21[0m     [0;32mif[0m [0mlemmatize[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 22[0;31m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mwl[0m[0;34m.[0m[0mlemmatize[0m[0;34m([0m[0mword[0m[0;34m)[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m [0;31m#lemmatize[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     23[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     24[0m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mword[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m<ipython-input-1-b7ddfba7567d>[0m in [0;36m<listcomp>[0;34m(.0)[0m
+[1;32m     20[0m     [0;31m#tokens = re.split('\W+', text) #create tokens[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     21[0m     [0;32mif[0m [0mlemmatize[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 22[0;31m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mwl[0m[0;34m.[0m[0mlemmatize[0m[0;34m([0m[0mword[0m[0;34m)[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m [0;31m#lemmatize[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     23[0m     [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     24[0m         [0mtext[0m [0;34m=[0m [0;34m" "[0m[0;34m.[0m[0mjoin[0m[0;34m([0m[0;34m[[0m[0mword[0m [0;32mfor[0m [0mword[0m [0;32min[0m [0mtext[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mword[0m [0;32mnot[0m [0;32min[0m [0mstop[0m [0;32mand[0m [0mword[0m[0;34m.[0m[0misalpha[0m[0;34m([0m[0;34m)[0m[0;34m][0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/stem/wordnet.py[0m in [0;36mlemmatize[0;34m(self, word, pos)[0m
+[1;32m     43[0m         [0;34m:[0m[0;32mreturn[0m[0;34m:[0m [0mThe[0m [0mlemma[0m [0mof[0m[0;31m [0m[0;31m`[0m[0mword[0m[0;31m`[0m[0;34m,[0m [0;32mfor[0m [0mthe[0m [0mgiven[0m[0;31m [0m[0;31m`[0m[0mpos[0m[0;31m`[0m[0;34m.[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     44[0m         """
+[0;32m---> 45[0;31m         [0mlemmas[0m [0;34m=[0m [0mwn[0m[0;34m.[0m[0m_morphy[0m[0;34m([0m[0mword[0m[0;34m,[0m [0mpos[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     46[0m         [0;32mreturn[0m [0mmin[0m[0;34m([0m[0mlemmas[0m[0;34m,[0m [0mkey[0m[0;34m=[0m[0mlen[0m[0;34m)[0m [0;32mif[0m [0mlemmas[0m [0;32melse[0m [0mword[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     47[0m [0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__getattr__[0;34m(self, attr)[0m
+[1;32m    119[0m             [0;32mraise[0m [0mAttributeError[0m[0;34m([0m[0;34m"LazyCorpusLoader object has no attribute '__bases__'"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    120[0m [0;34m[0m[0m
+[0;32m--> 121[0;31m         [0mself[0m[0;34m.[0m[0m__load[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    122[0m         [0;31m# This looks circular, but its not, since __load() changes our[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    123[0m         [0;31m# __class__ to something new:[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     87[0m [0;34m[0m[0m
+[1;32m     88[0m         [0;31m# Load the corpus.[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 89[0;31m         [0mcorpus[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m__reader_cls[0m[0;34m([0m[0mroot[0m[0;34m,[0m [0;34m*[0m[0mself[0m[0;34m.[0m[0m__args[0m[0;34m,[0m [0;34m**[0m[0mself[0m[0;34m.[0m[0m__kwargs[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     90[0m [0;34m[0m[0m
+[1;32m     91[0m         [0;31m# This is where the magic happens!  Transform ourselves into[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/reader/wordnet.py[0m in [0;36m__init__[0;34m(self, root, omw_reader)[0m
+[1;32m   1174[0m             )
+[1;32m   1175[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 1176[0;31m             [0mself[0m[0;34m.[0m[0mprovenances[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0momw_prov[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1177[0m [0;34m[0m[0m
+[1;32m   1178[0m         [0;31m# A cache to store the wordnet data of multiple languages[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/reader/wordnet.py[0m in [0;36momw_prov[0;34m(self)[0m
+[1;32m   1283[0m         [0mprovdict[0m [0;34m=[0m [0;34m{[0m[0;34m}[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1284[0m         [0mprovdict[0m[0;34m[[0m[0;34m"eng"[0m[0;34m][0m [0;34m=[0m [0;34m""[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-> 1285[0;31m         [0mfileids[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_omw_reader[0m[0;34m.[0m[0mfileids[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1286[0m         [0;32mfor[0m [0mfileid[0m [0;32min[0m [0mfileids[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1287[0m             [0mprov[0m[0;34m,[0m [0mlangfile[0m [0;34m=[0m [0mos[0m[0;34m.[0m[0mpath[0m[0;34m.[0m[0msplit[0m[0;34m([0m[0mfileid[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__getattr__[0;34m(self, attr)[0m
+[1;32m    119[0m             [0;32mraise[0m [0mAttributeError[0m[0;34m([0m[0;34m"LazyCorpusLoader object has no attribute '__bases__'"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    120[0m [0;34m[0m[0m
+[0;32m--> 121[0;31m         [0mself[0m[0;34m.[0m[0m__load[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    122[0m         [0;31m# This looks circular, but its not, since __load() changes our[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    123[0m         [0;31m# __class__ to something new:[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     84[0m                     [0mroot[0m [0;34m=[0m [0mnltk[0m[0;34m.[0m[0mdata[0m[0;34m.[0m[0mfind[0m[0;34m([0m[0;34mf"{self.subdir}/{zip_name}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     85[0m                 [0;32mexcept[0m [0mLookupError[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 86[0;31m                     [0;32mraise[0m [0me[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     87[0m [0;34m[0m[0m
+[1;32m     88[0m         [0;31m# Load the corpus.[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/corpus/util.py[0m in [0;36m__load[0;34m(self)[0m
+[1;32m     79[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     80[0m             [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 81[0;31m                 [0mroot[0m [0;34m=[0m [0mnltk[0m[0;34m.[0m[0mdata[0m[0;34m.[0m[0mfind[0m[0;34m([0m[0;34mf"{self.subdir}/{self.__name}"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     82[0m             [0;32mexcept[0m [0mLookupError[0m [0;32mas[0m [0me[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     83[0m                 [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/.local/lib/python3.6/site-packages/nltk/data.py[0m in [0;36mfind[0;34m(resource_name, paths)[0m
+[1;32m    581[0m     [0msep[0m [0;34m=[0m [0;34m"*"[0m [0;34m*[0m [0;36m70[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    582[0m     [0mresource_not_found[0m [0;34m=[0m [0;34mf"\n{sep}\n{msg}\n{sep}\n"[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 583[0;31m     [0;32mraise[0m [0mLookupError[0m[0;34m([0m[0mresource_not_found[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    584[0m [0;34m[0m[0m
+[1;32m    585[0m [0;34m[0m[0m
+
+[0;31mLookupError[0m: 
+**********************************************************************
+  Resource [93momw-1.4[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('omw-1.4')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/omw-1.4[0m
+
+  Searched in:
+    - '/raid/home/dgx914/nltk_data'
+    - '/usr/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+LookupError: 
+**********************************************************************
+  Resource [93momw-1.4[0m not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  [31m>>> import nltk
+  >>> nltk.download('omw-1.4')
+  [0m
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load [93mcorpora/omw-1.4[0m
+
+  Searched in:
+    - '/raid/home/dgx914/nltk_data'
+    - '/usr/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/share/nltk_data'
+    - '/usr/local/share/nltk_data'
+    - '/usr/lib/nltk_data'
+    - '/usr/local/lib/nltk_data'
+**********************************************************************
+
+
